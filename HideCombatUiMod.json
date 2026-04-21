@@ -1,0 +1,11 @@
+{
+  "id": "HideCombatUiMod",
+  "name": "Hide Combat UI Mod",
+  "author": "Aqua",
+  "description": "Hide selected combat UI elements while keeping the hand visible.",
+  "version": "0.0.1",
+  "has_pck": false,
+  "has_dll": true,
+  "dependencies": [],
+  "affects_gameplay": false
+}
