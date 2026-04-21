@@ -3,7 +3,7 @@ param(
 )
 
 # ===== 基本配置 =====
-$Project = "HideUI.csproj"
+$Project = "HideCombatUiMod.csproj"
 $ModName = "HideCombatUiMod"
 
 # 自动获取 Steam 路径

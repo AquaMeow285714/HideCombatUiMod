@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 using MegaCrit.Sts2.Core.Nodes.Relics;
 using MegaCrit.Sts2.Core.Nodes.Debug;
+using MegaCrit.Sts2.Core.Nodes.Multiplayer;
 using Godot;
 
 namespace YourMod.Patches;
@@ -31,6 +32,7 @@ public static class HideCombatUiPatch
     public static void CombatUi_Ready_Postfix(NCombatUi __instance)
     {
         ForceHideCombatUi(__instance);
+        EnsureMouseHidden();
     }
 
     [HarmonyPatch(typeof(NCombatUi), "Activate")]
@@ -38,6 +40,7 @@ public static class HideCombatUiPatch
     public static void CombatUi_Activate_Postfix(NCombatUi __instance)
     {
         ForceHideCombatUi(__instance);
+        EnsureMouseHidden();
     }
 
     [HarmonyPatch(typeof(NTopBar), "_Ready")]
@@ -45,6 +48,7 @@ public static class HideCombatUiPatch
     public static void TopBar_Ready_Postfix(NTopBar __instance)
     {
         ForceHideTopBar(__instance);
+        EnsureMouseHidden();
     }
 
     [HarmonyPatch(typeof(NTopBar), "Initialize")]
@@ -52,6 +56,7 @@ public static class HideCombatUiPatch
     public static void TopBar_Initialize_Postfix(NTopBar __instance)
     {
         ForceHideTopBar(__instance);
+        EnsureMouseHidden();
     }
 
     [HarmonyPatch(typeof(NRelic), "_Ready")]
@@ -59,6 +64,7 @@ public static class HideCombatUiPatch
     public static void Relic_Ready_Postfix(NRelic __instance)
     {
         ForceHideRelic(__instance);
+        EnsureMouseHidden();
     }
 
     [HarmonyPatch(typeof(NDebugInfoLabelManager), "_Ready")]
@@ -66,6 +72,7 @@ public static class HideCombatUiPatch
     public static void DebugInfo_Ready_Postfix(NDebugInfoLabelManager __instance)
     {
         ForceHideDebugInfo(__instance);
+        EnsureMouseHidden();
     }
 
     [HarmonyPatch(typeof(NDebugInfoLabelManager), "UpdateText")]
@@ -73,6 +80,7 @@ public static class HideCombatUiPatch
     public static void DebugInfo_UpdateText_Postfix(NDebugInfoLabelManager __instance)
     {
         ForceHideDebugInfo(__instance);
+        EnsureMouseHidden();
     }
 
     [HarmonyPatch(typeof(NDebugInfoLabelManager), "_Input")]
@@ -80,6 +88,31 @@ public static class HideCombatUiPatch
     public static void DebugInfo_Input_Postfix(NDebugInfoLabelManager __instance)
     {
         ForceHideDebugInfo(__instance);
+        EnsureMouseHidden();
+    }
+
+    [HarmonyPatch(typeof(NRemoteMouseCursorContainer), "_Ready")]
+    [HarmonyPostfix]
+    public static void RemoteMouseCursorContainer_Ready_Postfix(NRemoteMouseCursorContainer __instance)
+    {
+        ForceHideRemoteMouseCursorContainer(__instance);
+        EnsureMouseHidden();
+    }
+
+    [HarmonyPatch(typeof(NRemoteMouseCursorContainer), "_Input")]
+    [HarmonyPostfix]
+    public static void RemoteMouseCursorContainer_Input_Postfix(NRemoteMouseCursorContainer __instance)
+    {
+        ForceHideRemoteMouseCursorContainer(__instance);
+        EnsureMouseHidden();
+    }
+
+    [HarmonyPatch(typeof(NRemoteMouseCursorContainer), "ForceUpdateAllCursors")]
+    [HarmonyPostfix]
+    public static void RemoteMouseCursorContainer_ForceUpdateAllCursors_Postfix(NRemoteMouseCursorContainer __instance)
+    {
+        ForceHideRemoteMouseCursorContainer(__instance);
+        EnsureMouseHidden();
     }
 
     private static void ForceHideCombatUi(NCombatUi ui)
@@ -150,6 +183,19 @@ public static class HideCombatUiPatch
         SetTransparent(DebugSeedField?.GetValue(manager) as CanvasItem);
         SetTransparent(DebugModWarningContainerField?.GetValue(manager) as CanvasItem);
         SetTransparent(DebugModWarningLabelField?.GetValue(manager) as CanvasItem);
+    }
+
+    private static void ForceHideRemoteMouseCursorContainer(NRemoteMouseCursorContainer container)
+    {
+        if (container == null)
+            return;
+
+        SetTransparent(container);
+    }
+
+    private static void EnsureMouseHidden()
+    {
+        Input.MouseMode = Input.MouseModeEnum.Hidden;
     }
 
     private static void SetTransparent(CanvasItem item)
